@@ -59,7 +59,7 @@ bounty-vault/
 │   ├── src/db.js
 │   ├── src/indexer.js
 │   └── .env.example
-├── frontend/                     # React + Vite SPA (TODO: scaffold pending)
+├── frontend/                     # React + Vite SPA
 │   ├── src/pages/
 │   ├── src/components/
 │   ├── src/lib/
@@ -120,13 +120,14 @@ npm run dev                          # starts the API + event indexer (default :
 
 ### 4. Frontend (`frontend/`)
 
-> **TODO:** section to be verified once the Vite/React scaffold lands.
-
 ```bash
 cd frontend
 npm install
 npm run dev                          # starts the SPA (default :5173)
 ```
+
+See `frontend/README.md` for env configuration, the backend/on-chain
+data-source toggle, and a local end-to-end check of the four demo flows.
 
 ## Sepolia Deployment & Faucets
 
