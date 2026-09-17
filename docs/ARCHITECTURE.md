@@ -190,7 +190,9 @@ CREATE TABLE bounties (
   title           TEXT NOT NULL,
   description     TEXT NOT NULL,
   create_tx_hash  TEXT NOT NULL UNIQUE,  -- tx that emitted BountyCreated
-  created_at      TEXT NOT NULL          -- ISO 8601 UTC
+  created_at      TEXT NOT NULL,         -- ISO 8601 UTC
+  status          TEXT NOT NULL DEFAULT 'pending'
+                  CHECK (status IN ('pending', 'confirmed', 'orphaned'))
 );
 
 -- Full submission text; hash must match the on-chain submissionHash.
@@ -200,7 +202,9 @@ CREATE TABLE submissions (
   content         TEXT NOT NULL,
   content_hash    TEXT NOT NULL,         -- 0x-prefixed keccak256, 66 chars
   submit_tx_hash  TEXT NOT NULL UNIQUE,
-  submitted_at    TEXT NOT NULL
+  submitted_at    TEXT NOT NULL,
+  status          TEXT NOT NULL DEFAULT 'pending'
+                  CHECK (status IN ('pending', 'confirmed', 'orphaned'))
 );
 
 -- Rebuildable index of contract events (drives list/status views).
@@ -224,6 +228,13 @@ CREATE TABLE indexer_state (
 ```
 
 Addresses are stored lowercase; compare case-insensitively.
+
+The `status` column on `bounties` and `submissions` persists the asynchronous
+verification lifecycle of §3.2 Notes: the API inserts rows as `pending`, and the
+indexer (§3.3) reconciles them against indexed on-chain events — `confirmed`
+when the referenced transaction (and, for submissions, the hunter and content
+hash) matches, `orphaned` when the chain contradicts it. `orphaned` rows are
+hidden from all API reads.
 
 ### 3.2 REST API (base `/api`, JSON)
 
