@@ -1,0 +1,20 @@
+{
+  "name": "bounty-vault-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "BountyVault off-chain metadata API and contract event indexer (Express + SQLite)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "better-sqlite3": "^12.2.0",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.5",
+    "express": "^4.21.2"
+  }
+}
