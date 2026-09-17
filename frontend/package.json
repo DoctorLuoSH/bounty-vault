@@ -1,0 +1,23 @@
+{
+  "name": "bounty-vault-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "description": "BountyVault React SPA (Vite + Ethers.js v6 + MetaMask)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:e2e": "node scripts/e2e-local.mjs"
+  },
+  "dependencies": {
+    "ethers": "^6.13.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "vite": "^5.4.10"
+  }
+}
