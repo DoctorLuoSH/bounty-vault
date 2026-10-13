@@ -62,6 +62,29 @@ test('GET /api/health returns ok', async () => {
   assert.deepEqual(body, { status: 'ok' });
 });
 
+test('CORS: responses allow cross-origin browser calls; preflight succeeds', async () => {
+  const origin = 'http://localhost:5173';
+
+  const res = await fetch(base + '/api/health', { headers: { Origin: origin } });
+  assert.equal(res.status, 200);
+  assert.equal(res.headers.get('access-control-allow-origin'), '*');
+  await res.arrayBuffer();
+
+  // POST with Content-Type: application/json triggers an OPTIONS preflight.
+  const preflight = await fetch(base + '/api/bounties', {
+    method: 'OPTIONS',
+    headers: {
+      Origin: origin,
+      'Access-Control-Request-Method': 'POST',
+      'Access-Control-Request-Headers': 'content-type',
+    },
+  });
+  assert.ok(preflight.status >= 200 && preflight.status < 300, `preflight status ${preflight.status}`);
+  assert.equal(preflight.headers.get('access-control-allow-origin'), '*');
+  assert.match(preflight.headers.get('access-control-allow-methods') || '', /POST/);
+  await preflight.arrayBuffer();
+});
+
 test('POST /api/bounties validates input', async () => {
   const bad = [
     { ...validBounty(), onChainId: -1 },
