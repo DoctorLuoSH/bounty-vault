@@ -76,6 +76,7 @@ bounty-vault/
 │   ├── src/db.js                 # schema + migrations
 │   ├── src/indexer.js            # eth_getLogs polling loop
 │   ├── test/                     # API & indexer tests (node:test)
+│   ├── scripts/seed-demo-metadata.js  # re-seed Sepolia demo metadata locally
 │   └── .env.example
 ├── frontend/                     # React + Vite SPA
 │   ├── src/pages/                # list / create / detail / my-dashboard
@@ -154,6 +155,21 @@ indexer), `CONTRACT_ADDRESS` + `DEPLOYMENT_BLOCK` (from the deploy step),
 `INDEXER_CONFIRMATIONS` (reorg safety, default 12). Leave `CONTRACT_ADDRESS`
 empty to run the API without indexing.
 
+The API sends permissive CORS headers (`Access-Control-Allow-Origin: *`,
+including `OPTIONS` preflights) so the Vite dev server on
+<http://localhost:5173> can call it from the browser — the frontend probes
+`GET /api/health` to pick its data source, and without CORS headers the browser
+blocks that probe and the app silently falls back to reading the chain directly.
+
+To see the [seeded demo bounties](#seeded-demo-data-live-on-sepolia) with their
+titles and descriptions on a fresh checkout, re-seed the off-chain metadata once
+while the backend is running (idempotent — existing rows are skipped):
+
+```bash
+cd backend
+node scripts/seed-demo-metadata.js   # API_BASE_URL overrides http://localhost:3001/api
+```
+
 ### 4. Frontend (`frontend/`)
 
 ```bash
@@ -213,7 +229,10 @@ Corresponding transactions (verifiable on Sepolia Etherscan):
 The matching off-chain metadata (titles, descriptions, submission text) lives in
 the backend's SQLite database and is seeded through the REST API
 (`POST /api/bounties`, `POST /api/bounties/:id/submissions`); the indexer confirms
-each row against the on-chain events.
+each row against the on-chain events. A fresh checkout starts with an empty
+database — run `node scripts/seed-demo-metadata.js` once (see
+[Setup & Run](#3-backend-backend)) to restore the demo titles and descriptions
+locally.
 
 ## Demo Script
 
