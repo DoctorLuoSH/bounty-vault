@@ -39,6 +39,12 @@ private content (title, description, submission text) lives off-chain.*
 
 ## 2. Smart Contract Design (`contracts/contracts/BountyVault.sol`)
 
+> **V2 note (2026-10-13):** the contest-based successor
+> `contracts/contracts/BountyVaultV2.sol` — multiple submissions, poster-judged
+> winner, optimistic settlement, pull payments — is specified in
+> `docs/CONTEST-V2.md`. This section keeps documenting v1, which remains
+> deployed and unchanged.
+
 Solidity `^0.8.24`, Hardhat toolchain, MIT license. ETH only (no ERC-20 in MVP).
 
 ### 2.1 State machine
