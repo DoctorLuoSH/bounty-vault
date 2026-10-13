@@ -5,6 +5,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
+const cors = require('cors');
 const express = require('express');
 const { JsonRpcProvider } = require('ethers');
 
@@ -17,6 +18,10 @@ const { isAddress } = require('./validate');
 /** Build the Express app (docs/ARCHITECTURE.md section 3.2; base path /api). */
 function createApp(db) {
   const app = express();
+  // The frontend dev server runs on a different origin (localhost:5173 vs
+  // localhost:3001), so browsers block API calls without CORS headers.
+  // MVP: allow every origin; cors() also answers OPTIONS preflights with 204.
+  app.use(cors());
   app.use(express.json({ limit: '1mb' }));
 
   app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
